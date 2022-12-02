@@ -35,40 +35,45 @@ class Day1Spec extends AnyWordSpec with Matchers with AdventOfCodeHelper {
 
 10000
 """
+
   val exampleInts : Seq[Option[Int]] = textToInts(exampleText)
 
   def assertAndPrint[T](message: String, answer: T, expected: T) = {
-    // println(s"${message.padTo(30, ' ')} - $answer")
-
-
-    
     answer shouldBe expected
+  }
+  
+  def splitIntoElves(textInput : String ) : Seq[Int] = {
+    
+    val lines = textToInts(textInput)
+
+    val elves = Array.newBuilder[Int]
+    
+    var caloriesTotal = 0
+    for (line <- lines){
+      line match {
+        case None => {
+          elves += caloriesTotal
+          caloriesTotal = 0
+        }
+        case Some(calories) => caloriesTotal += calories
+      }
+    }
+    elves += caloriesTotal
+
+    elves.result()
   }
 
   def solveA(textInput : String ) : Int = {
-    
-    val ints = textToInts(textInput)
-
-    def splitIntoChunks(list: Seq[Option[Int]]) : Seq[Int] = {
-      
-      val elves = Array.newBuilder[Int]
-      
-      var total = 0
-      for (x <- list){
-        x match {
-          case None => {
-            elves += total
-            total = 0
-          }
-          case Some(v) => total+=v
-        }
-      }
-
-      elves.result()
-    }
-     
-    val elves : Seq[Int] = splitIntoChunks(ints)
+    val elves = splitIntoElves(textInput)
     elves.max
+  }
+
+  def solveB(textInput : String ) : Int = {
+    splitIntoElves(textInput)
+      .sortBy(identity)
+      .reverse
+      .take(3)
+      .sum
   }
   
   "Day 1" should {
@@ -78,6 +83,14 @@ class Day1Spec extends AnyWordSpec with Matchers with AdventOfCodeHelper {
 
     "Part 1" in {
        assertAndPrint("Part 1", solveA(data), 69795)
+     }
+
+    "Part 2 Example" in {
+      assertAndPrint("Part 1 example", solveB(exampleText), 45000)
+     }
+
+    "Part 2" in {
+      assertAndPrint("Part 1", solveB(data), 208437)
      }
   }
 }
