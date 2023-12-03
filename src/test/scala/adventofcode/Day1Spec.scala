@@ -4,7 +4,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 
 class Day1Spec extends AnyWordSpec with Matchers with AdventOfCodeHelper {
-  val inputFilename = "day1/input.txt"
+  def inputFilename() = "day1/input.txt"
 
   private def textToInts(lines: String) : Seq[Option[Int]] = {
     lines
